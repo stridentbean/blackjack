@@ -3,15 +3,23 @@
 class window.App extends Backbone.Model
 
   result: 3
+  binder = null
 
   initialize: ->
+    binder = @
     @set 'deck', deck = new Deck()
     @set 'playerHand', deck.dealPlayer()
     @set 'dealerHand', deck.dealDealer()
-    @get('playerHand').on('natural21', @win , @)
-    @get('dealerHand').on('natural21', @lose, @)
-    @get('playerHand').on('bust', @lose, @)
-    @get('dealerHand').on('bust', @win, @)
+    @get('playerHand').on 'natural21', (event) =>
+      binder.win()
+    @get('dealerHand').on 'natural21', (event) =>
+      binder.lose()
+    @get('playerHand').on 'bust', (event) =>
+      binder.lose()
+    @get('dealerHand').on 'bust', (event) =>
+      binder.win()
+    @get('playerHand').on 'stand', (event) =>
+      binder.outcome()
 
   outcome: ->
     if @get('dealerHand').scores()[2] < @get('playerHand').scores()[2] then @win()
@@ -23,9 +31,9 @@ class window.App extends Backbone.Model
 
   win: ->
     @result = 1
-    1
+    console.log('You Win')
     #TODO start new game
   lose: ->
     @result = -1
-    -1
+    console.log('You Lose')
     #TODO start new game
