@@ -2,12 +2,10 @@ class window.Hand extends Backbone.Collection
   model: Card
 
   initialize: (array, @deck, @isDealer) ->
-    if @isNatural21() then @trigger('natural21', @)
 
   hit: ->
     temp = @deck.pop()
     @add(temp)
-    debugger
     if @isBust() then @trigger 'bust'
     temp
 
@@ -30,7 +28,8 @@ class window.Hand extends Backbone.Collection
     [@minScore(), @minScore() + 10 * @hasAce(), highscore]
 
   isNatural21: ->
-    @scores()[1] is 21 and @length is 2
+    console.log(@scores()[1])
+    @scores()[1] is 21
 
   isBust: ->
     @scores()[0] > 21
